@@ -13,9 +13,49 @@ namespace NZWalks.API.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Region>> GetAllAsync()
+        public async Task<Region> AddAsync(Region region)
         {
-            return await _context.Regions.ToListAsync();
+            region.Id = Guid.NewGuid();
+            await _context.Regions.AddAsync(region);
+            await _context.SaveChangesAsync();
+            return region;
+        }
+
+        public async Task<Region> DeleteAsync(Guid id)
+        {
+            var region = await _context.Regions.FirstOrDefaultAsync(region => region.Id == id);
+            if (region == null)
+            {
+                return null;
+            }
+
+            _context.Regions.Remove(region);
+            await _context.SaveChangesAsync();
+            return region;
+        }
+
+        public async Task<IEnumerable<Region>> GetAllAsync() => await _context.Regions.ToListAsync();
+
+        public async Task<Region> GetAsync(Guid id) =>
+            await _context.Regions.FirstOrDefaultAsync(region => region.Id == id);
+
+        public async Task<Region> UpdateAsync(Guid id, Region region)
+        {
+           var existingRegion = await _context.Regions.FirstOrDefaultAsync(region => region.Id == id);
+            if (existingRegion == null)
+            {
+                return null;
+            }
+
+            existingRegion.Code = region.Code;
+            existingRegion.Name = region.Name;
+            existingRegion.Lat = region.Lat;
+            existingRegion.Long = region.Long;
+            existingRegion.Area = region.Area;
+            existingRegion.Population = region.Population;
+
+            await _context.SaveChangesAsync();
+            return existingRegion;
         }
     }
 }
