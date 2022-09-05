@@ -2,7 +2,7 @@
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 
-namespace NZWalks.API.Repositories
+namespace NZWalks.API.Repositories.Implements
 {
     public class RegionRepository : IRegionRepository
     {
@@ -41,7 +41,7 @@ namespace NZWalks.API.Repositories
 
         public async Task<Region> UpdateAsync(Guid id, Region region)
         {
-           var existingRegion = await _context.Regions.FirstOrDefaultAsync(region => region.Id == id);
+            var existingRegion = await _context.Regions.FirstOrDefaultAsync(region => region.Id == id);
             if (existingRegion == null)
             {
                 return null;
