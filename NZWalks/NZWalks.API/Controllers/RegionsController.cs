@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.DTO;
@@ -8,6 +9,7 @@ namespace NZWalks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
         private readonly IRegionRepository regionRepository;
@@ -58,6 +60,12 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRegionAsync(AddRegionRequest addRegionRequest)
         {
+            //if (!ValidateAddRegionAsync(addRegionRequest))
+            //{
+            //    return BadRequest(ModelState);
+            //}
+           
+
             var region = new Models.Domain.Region()
             {
                 Code = addRegionRequest.Code,
@@ -81,7 +89,7 @@ namespace NZWalks.API.Controllers
                 Population = region.Population
             };
 
-            return CreatedAtAction(nameof(GetRegionAsync), new {id = regionDTO.Id}, regionDTO);
+            return CreatedAtAction(nameof(GetRegionAsync), new { id = regionDTO.Id }, regionDTO);
         }
 
         [HttpDelete]
@@ -110,7 +118,8 @@ namespace NZWalks.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateRegionAsync([FromRoute] Guid id, [FromBody] Models.DTO.UpdateRegionRequest updateRegionRequest)
+        public async Task<IActionResult> UpdateRegionAsync([FromRoute] Guid id,
+            [FromBody] Models.DTO.UpdateRegionRequest updateRegionRequest)
         {
             var region = new Models.Domain.Region()
             {
@@ -129,7 +138,7 @@ namespace NZWalks.API.Controllers
                 return NotFound();
             }
 
-            var regionDTO= new Models.DTO.Region
+            var regionDTO = new Models.DTO.Region
             {
                 Id = region.Id,
                 Name = region.Name,
@@ -142,5 +151,64 @@ namespace NZWalks.API.Controllers
 
             return Ok(regionDTO);
         }
+
+        #region Private methods
+
+        private Boolean ValidateAddRegionAsync(AddRegionRequest addRegionRequest)
+        {
+            if (addRegionRequest == null)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest),
+                    $"Add Region Data is required.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(addRegionRequest.Code))
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Code), 
+                    $"{nameof(addRegionRequest.Code)} cannot be null or white space.");
+            }
+
+            if (string.IsNullOrWhiteSpace(addRegionRequest.Name))
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Name),
+                    $"{nameof(addRegionRequest.Name)} cannot be null or white space.");
+            }
+
+            if (addRegionRequest.Area <= 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Area),
+                    $"{nameof(addRegionRequest.Area)} cannot be less than or equal to zero.");
+            }
+
+
+            if (addRegionRequest.Lat <= 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Lat),
+                    $"{nameof(addRegionRequest.Lat)} cannot be less than or equal to zero.");
+            }
+
+
+            if (addRegionRequest.Long <= 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Long),
+                    $"{nameof(addRegionRequest.Long)} cannot be less than or equal to zero.");
+            }
+
+            if (addRegionRequest.Population <= 0)
+            {
+                ModelState.AddModelError(nameof(addRegionRequest.Population),
+                    $"{nameof(addRegionRequest.Population)} cannot be less than or equal to zero.");
+            }
+
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

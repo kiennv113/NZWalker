@@ -47,6 +47,7 @@ namespace NZWalks.API.Repositories.Implements
             }
 
             existingWD.Code = walkDifficulty.Code;
+            await _context.SaveChangesAsync();
             return existingWD;
         }
     }

@@ -52,6 +52,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpDelete]
+        [Route("{id:guid}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var result = await walkDifficultyRepository.DeleteAsync(id);
