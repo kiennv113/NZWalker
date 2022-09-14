@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NZWalks.API.Data;
-using NZWalks.API.Repositories;
+using NZWalks.API.Repositories.Base;
 using NZWalks.API.Repositories.Implements;
 using System.Text;
 
@@ -28,7 +28,7 @@ builder.Services.AddScoped<IWalkRepository, WalkRepository>();
 builder.Services.AddScoped<IWalkDifficultyRepository, WalkDifficultyRepository>();
 builder.Services.AddScoped<ITokenHandler, NZWalks.API.Repositories.Implements.TokenHandler>();
 
-builder.Services.AddSingleton<IUserRepository, StaticUserRopository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

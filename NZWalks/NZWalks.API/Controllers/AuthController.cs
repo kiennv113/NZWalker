@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.DTO;
-using NZWalks.API.Repositories;
+using NZWalks.API.Repositories.Base;
 
 namespace NZWalks.API.Controllers
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using NZWalks.API.Models.Domain;
+using NZWalks.API.Repositories.Base;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,7 +24,8 @@ namespace NZWalks.API.Repositories.Implements
             claims.Add(new Claim(ClaimTypes.Email, user.EmailAddress));
 
             //Loop into role of user
-            user.Roles.ForEach((role) => {
+            user.Roles.ForEach((role) =>
+            {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             });
 

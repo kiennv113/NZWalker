@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
+using NZWalks.API.Repositories.Base;
 using System.Xml.Linq;
 
 namespace NZWalks.API.Repositories.Implements
